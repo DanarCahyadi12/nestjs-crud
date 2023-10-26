@@ -16,10 +16,15 @@ export class UserService {
   }
 
   async findOneByEmail(email: string) {
-    return await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: {
         email: email,
       },
     });
+    if (!user) return null;
+    return {
+      ...user,
+      createdAt: user.createdAt.toISOString(),
+    };
   }
 }
