@@ -14,7 +14,13 @@ export class UserService {
       },
     });
   }
-
+  async findOneById(idUser: string) {
+    return await this.prismaService.user.findUnique({
+      where: {
+        id: idUser,
+      },
+    });
+  }
   async findOneByEmail(email: string) {
     const user = await this.prismaService.user.findUnique({
       where: {
