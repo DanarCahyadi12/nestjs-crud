@@ -9,7 +9,6 @@ export const User = createParamDecorator(
     datas.forEach((key) => {
       result[key] = user[key];
     });
-
     return result;
   },
 );
