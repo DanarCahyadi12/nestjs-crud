@@ -27,4 +27,19 @@ export class UserService {
       createdAt: user.createdAt.toISOString(),
     };
   }
+
+  async updateToken(idUser: string, hashedToken: string) {
+    return await this.prismaService.user.update({
+      where: {
+        id: idUser,
+      },
+      data: {
+        refreshToken: hashedToken,
+      },
+      select: {
+        id: true,
+        refreshToken: true,
+      },
+    });
+  }
 }
