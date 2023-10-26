@@ -1,13 +1,15 @@
-import { ExecutionContext } from '@nestjs/common';
+import { ExecutionContext, createParamDecorator } from '@nestjs/common';
 
-export const User = (context: ExecutionContext, ...datas: string[]) => {
-  const req = context.switchToHttp().getRequest();
-  const user = req.UserController;
-  if (datas.length === 0) return user;
-  const result: object = {};
-  datas.forEach((key) => {
-    result[key] = user[key];
-  });
+export const User = createParamDecorator(
+  (datas: string[], ctx: ExecutionContext) => {
+    const req = ctx.switchToHttp().getRequest();
+    const user = req.user;
+    if (datas.length === 0) return user;
+    const result: object = {};
+    datas.forEach((key) => {
+      result[key] = user[key];
+    });
 
-  return result;
-};
+    return result;
+  },
+);
