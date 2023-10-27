@@ -1,8 +1,8 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserPayload } from '../interfaces/auth.interface';
 import { Injectable } from '@nestjs/common';
+import { Cookies } from '../decorators/cookies.decorator';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -18,8 +18,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  validate(req: Request, payload: UserPayload) {
-    const refreshToken = req.get('Authorization').replace('Bearer', '').trim();
+  validate(@Cookies('token') refreshToken, payload: UserPayload) {
     return {
       ...payload,
       refreshToken,

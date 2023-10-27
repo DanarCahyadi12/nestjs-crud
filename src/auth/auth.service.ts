@@ -9,6 +9,7 @@ import { SignInDto } from './dto/signin.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UserPayload } from './interfaces/auth.interface';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signIn(credentials: SignInDto): Promise<ResponseAuth> {
+  async signIn(credentials: SignInDto, res: Response): Promise<ResponseAuth> {
     const { email, password } = credentials;
     try {
       const user = await this.userService.findOneByEmail(email);
@@ -38,12 +39,15 @@ export class AuthService {
       const salt = await bcrypt.genSalt();
       const hashedRefreshToken = await bcrypt.hash(refreshToken, salt);
       await this.userService.updateToken(user.id, hashedRefreshToken);
+      res.cookie('token', refreshToken, {
+        maxAge: 60 * 60 * 24 * 1,
+        httpOnly: true,
+      });
       return {
         status: 'success',
         message: 'Sign in successfully',
         data: {
           accessToken,
-          refreshToken,
         },
       };
     } catch (error) {

@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Post,
   Get,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -12,6 +13,7 @@ import { SignInDto } from './dto/signin.dto';
 import { SkipAuth } from './decorators/auth.decorator';
 import { User } from '../user/decorators/user.decorator';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -20,8 +22,8 @@ export class AuthController {
   @SkipAuth()
   @Post('/signin')
   @HttpCode(HttpStatus.OK)
-  async signin(@Body() credentials: SignInDto) {
-    return this.authService.signIn(credentials);
+  async signin(@Body() credentials: SignInDto, @Res() res: Response) {
+    res.json(await this.authService.signIn(credentials, res));
   }
 
   @SkipAuth()
