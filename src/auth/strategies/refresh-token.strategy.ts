@@ -1,8 +1,8 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UserPayload } from '../interfaces/auth.interface';
 import { Injectable } from '@nestjs/common';
-import { Cookies } from '../decorators/cookies.decorator';
+import { Request } from 'express';
+import { UserPayload } from '../interfaces/auth.interface';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -11,17 +11,22 @@ export class RefreshTokenStrategy extends PassportStrategy(
 ) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (req: Request) => {
+          return req.cookies?.['token'];
+        },
+      ]),
       ignoreExpiration: false,
       secretOrKey: process.env.REFRESH_TOKEN_KEY,
-      passReqToCallback: true,
     });
   }
-
-  validate(@Cookies('token') refreshToken, payload: UserPayload) {
+  validate(payload: UserPayload) {
     return {
-      ...payload,
-      refreshToken,
+      sub: payload.sub,
+      name: payload.name,
+      email: payload.name,
+      createdAt: payload.createdAt,
+      role: payload.role,
     };
   }
 }

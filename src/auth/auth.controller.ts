@@ -14,6 +14,7 @@ import { SkipAuth } from './decorators/auth.decorator';
 import { User } from '../user/decorators/user.decorator';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { Response } from 'express';
+import { Cookies } from './decorators/cookies.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -30,8 +31,8 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @Get('token')
   @HttpCode(HttpStatus.OK)
-  async getToken(@User(['sub', 'refreshToken']) datas) {
-    const { sub, refreshToken } = datas;
+  async getToken(@User(['sub']) user, @Cookies('token') refreshToken: string) {
+    const { sub } = user;
     return await this.authService.getAccessToken(refreshToken, sub);
   }
 }
