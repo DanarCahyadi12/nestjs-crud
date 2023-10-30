@@ -7,6 +7,7 @@ import { AccessTokenGuard } from './guards/access-token.auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [UserModule, JwtModule.register({})],
@@ -16,6 +17,10 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     {
       provide: APP_GUARD,
       useClass: AccessTokenGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     AccessTokenStrategy,
     RefreshTokenStrategy,
