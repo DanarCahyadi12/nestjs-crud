@@ -1,4 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { User } from './decorators/user.decorator';
 
 @Controller('user')
-export class UserController {}
+export class UserController {
+  @Get()
+  getUser(@User() user) {
+    return user;
+  }
+}
