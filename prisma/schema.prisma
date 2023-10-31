@@ -26,10 +26,10 @@ model Product {
   id String @id @default(uuid())
   title String 
   description String? @db.LongText
-  price BigInt
-  stock BigInt
+  price Int
+  stock Int
   createdAt DateTime 
-  updateAt DateTime @default(now())
+  updatedAt DateTime @default(now())
   User User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
