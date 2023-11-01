@@ -40,7 +40,7 @@ export class AuthService {
       const hashedRefreshToken = await bcrypt.hash(refreshToken, salt);
       await this.userService.updateToken(user.id, hashedRefreshToken);
       res.cookie('token', refreshToken, {
-        maxAge: 60 * 60 * 24 * 1,
+        maxAge: 604800,
         httpOnly: true,
       });
       return {
