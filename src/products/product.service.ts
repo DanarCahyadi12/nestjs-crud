@@ -38,7 +38,7 @@ export class ProductService {
 
   async getProducts(limit: number, page: number): Promise<GetProductsResponse> {
     const offset: number = (page - 1) * limit;
-    const totalProducts = await this.prismaService.user.count();
+    const totalProducts = await this.prismaService.product.count();
     const totalPages = totalProducts / limit;
     const products = await this.prismaService.product.findMany({
       skip: offset,
