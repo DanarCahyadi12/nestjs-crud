@@ -159,4 +159,12 @@ describe('ProductService', () => {
     expect(result.data.items.price).toBe(dto.price);
     expect(result.data.items.stock).toBe(dto.stock);
   });
+
+  test('Object must be NotFoundException', async () => {
+    try {
+      await service.deleteProduct('soko');
+    } catch (error) {
+      expect(error).toBeInstanceOf(NotFoundException);
+    }
+  });
 });

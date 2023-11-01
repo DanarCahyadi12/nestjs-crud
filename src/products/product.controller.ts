@@ -9,6 +9,7 @@ import {
   Req,
   Put,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -47,5 +48,11 @@ export class ProductController {
     @User('sub') idUser,
   ) {
     return this.productService.updateProduct(id, dto, idUser);
+  }
+
+  @Delete(':id')
+  @Roles(Role.Admin)
+  async deleteProduct(@Param('id') idProduct: string) {
+    return await this.productService.deleteProduct(idProduct);
   }
 }

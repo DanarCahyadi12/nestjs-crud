@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import {
   CreateProductResponse,
+  DeleteProductResponse,
   GetProductsResponse,
   UpdateProductResponse,
 } from './interfaces/products.interface';
@@ -126,6 +127,22 @@ export class ProductService {
       };
     } catch (error) {
       if (error) throw error;
+    }
+  }
+
+  async deleteProduct(idProduct: string): Promise<DeleteProductResponse> {
+    try {
+      await this.prismaService.product.delete({
+        where: {
+          id: idProduct,
+        },
+      });
+      return {
+        status: 'success',
+        message: 'Product success deleted',
+      };
+    } catch {
+      throw new NotFoundException('Product not found');
     }
   }
 }

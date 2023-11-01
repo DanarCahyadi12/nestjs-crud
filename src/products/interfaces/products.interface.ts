@@ -29,3 +29,8 @@ export interface UpdateProductResponse {
     items: Products;
   };
 }
+
+export interface DeleteProductResponse {
+  status: string;
+  message: string;
+}
