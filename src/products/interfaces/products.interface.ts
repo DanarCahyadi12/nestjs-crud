@@ -21,3 +21,11 @@ export interface GetProductsResponse {
     items: Products[];
   };
 }
+
+export interface UpdateProductResponse {
+  status: string;
+  message: string;
+  data: {
+    items: Products;
+  };
+}

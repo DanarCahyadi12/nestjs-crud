@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import {
   CreateProductResponse,
   GetProductsResponse,
+  UpdateProductResponse,
 } from './interfaces/products.interface';
 import { Products } from './entity/product.entity';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -22,7 +24,6 @@ export class ProductService {
         title: product.title,
         description: product.description,
         stock: product.stock,
-        createdAt: new Date(),
         price: product.price,
         userId: id,
       },
@@ -84,5 +85,47 @@ export class ProductService {
   getNextURL(limit: number, page: number, totalPages: number): string | null {
     if (page >= totalPages) return null;
     return `${this.getURL()}?limit=${limit}&page=${page + 1}`;
+  }
+
+  async updateProduct(
+    id: string,
+    dto: UpdateProductDto,
+    idUser: string,
+  ): Promise<UpdateProductResponse> {
+    try {
+      const product = await this.prismaService.product.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      if (!product) throw new NotFoundException('Product not found');
+      const productUpdated = await this.prismaService.product.update({
+        where: {
+          id: id,
+        },
+        data: {
+          title: dto.title,
+          description: dto.description,
+          price: dto.price,
+          stock: dto.stock,
+          userId: idUser,
+          updatedAt: new Date(),
+        },
+      });
+      const formatedProduct = {
+        ...productUpdated,
+        createdAt: productUpdated.createdAt.toISOString(),
+        updatedAt: productUpdated.updatedAt.toISOString(),
+      };
+      return {
+        status: 'success',
+        message: 'Update product successfully',
+        data: {
+          items: formatedProduct,
+        },
+      };
+    } catch (error) {
+      if (error) throw error;
+    }
   }
 }

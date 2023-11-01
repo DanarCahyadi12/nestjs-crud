@@ -1,10 +1,21 @@
 import { Role } from '../auth/enums/roles.enum';
-import { Controller, Get, Post, Body, Query, Ip, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Ip,
+  Req,
+  Put,
+  Param,
+} from '@nestjs/common';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CreateProductDto } from './dto/create-product.dto';
 import { User } from '../user/decorators/user.decorator';
 import { ProductService } from './product.service';
 import { Request } from 'express';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductController {
@@ -26,5 +37,15 @@ export class ProductController {
     const protocol = req.protocol;
     this.productService.setProtocolAndIP({ protocol, ip });
     return await this.productService.getProducts(limit, page);
+  }
+
+  @Put(':id')
+  @Roles(Role.Admin)
+  async updateProduct(
+    @Param('id') id: string,
+    @Body() dto: UpdateProductDto,
+    @User('sub') idUser,
+  ) {
+    return this.productService.updateProduct(id, dto, idUser);
   }
 }

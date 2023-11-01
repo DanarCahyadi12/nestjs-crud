@@ -2,8 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductService } from './product.service';
 import { PrismaModule } from '../prisma/prisma.module';
 // import { CreateProductDto } from './dto/create-product.dto';
-import { Products } from './entity/product.entity';
 import { PrismaService } from '../prisma/prisma.service';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { NotFoundException } from '@nestjs/common';
 
 describe('ProductService', () => {
   let service: ProductService;
@@ -95,40 +96,12 @@ describe('ProductService', () => {
     expect(products.data.totalProducts).toBeDefined();
   });
   test('Items should have valid values', async () => {
-    const products: Products[] = [
-      {
-        id: '002ba806-b053-4fd4-9542-d917738d8b25',
-        title: 'product 1',
-        description: 'Products description',
-        price: 120,
-        stock: 100,
-        createdAt: '2023-10-31T12:03:18.729Z',
-        updatedAt: '2023-10-31T12:03:18.770Z',
-        userId: 'dec2df5a-4a40-4860-9165-832a3f87258b',
-      },
-      {
-        id: '007ad66e-6295-4c84-bd49-31e472a6bdfe',
-        title: 'product 1',
-        description: 'Products description',
-        price: 120,
-        stock: 100,
-        createdAt: '2023-10-31T10:14:17.664Z',
-        updatedAt: '2023-10-31T20:00:57.280Z',
-        userId: 'dec2df5a-4a40-4860-9165-832a3f87258b',
-      },
-      {
-        id: '0126e6de-5ac4-4dc8-bf2b-298ffc258c05',
-        title: 'product 1',
-        description: 'Products description',
-        price: 120,
-        stock: 100,
-        createdAt: '2023-10-31T09:18:36.873Z',
-        updatedAt: '2023-10-31T20:00:57.280Z',
-        userId: 'dec2df5a-4a40-4860-9165-832a3f87258b',
-      },
-    ];
+    const products = await prismaService.product.findMany({
+      take: 3,
+    });
+    const mapped = service.mapProducts(products);
     const result = await service.getProducts(3, 1);
-    expect(result.data.items).toEqual(products);
+    expect(result.data.items).toEqual(mapped);
   });
 
   test('Should return valid next url on data object response', async () => {
@@ -155,5 +128,35 @@ describe('ProductService', () => {
     service.setProtocolAndIP({ protocol: 'http', ip: '192.0.0.1' });
     const result = await service.getProducts(3, 1);
     expect(result.data.prev).toBeNull();
+  });
+
+  test('Should instance of BadRequestException', async () => {
+    const dto: UpdateProductDto = {
+      title: 'MAS',
+      description: 'MAS DESC',
+      price: 201,
+      stock: 200,
+    };
+    try {
+      await service.updateProduct('ddedex', dto, 'ased');
+    } catch (error) {
+      expect(error).toBeInstanceOf(NotFoundException);
+    }
+  });
+
+  test('Data should updated', async () => {
+    const ID_PRODUCT = '002ba806-b053-4fd4-9542-d917738d8b25';
+    const ID_USER = 'dec2df5a-4a40-4860-9165-832a3f87258b';
+    const dto: UpdateProductDto = {
+      title: 'Kondom bocor',
+      description: 'Kondom bocor yang telah digunakan oleh cewek sexy',
+      price: 150,
+      stock: 12,
+    };
+    const result = await service.updateProduct(ID_PRODUCT, dto, ID_USER);
+    expect(result.data.items.title).toBe(dto.title);
+    expect(result.data.items.description).toBe(dto.description);
+    expect(result.data.items.price).toBe(dto.price);
+    expect(result.data.items.stock).toBe(dto.stock);
   });
 });
