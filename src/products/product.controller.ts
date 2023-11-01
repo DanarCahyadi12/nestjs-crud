@@ -1,5 +1,5 @@
 import { Role } from '../auth/enums/roles.enum';
-import { Controller, Get, Post, Body, Query, Ip } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Ip, Req } from '@nestjs/common';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CreateProductDto } from './dto/create-product.dto';
 import { User } from '../user/decorators/user.decorator';
@@ -20,9 +20,9 @@ export class ProductController {
   }
 
   @Get()
-  async getProducts(@Query() query: any, @Ip() ip, req: Request) {
-    const limit: number = parseInt(query?.limit) || 1;
-    const page: number = parseInt(query?.page) || 50;
+  async getProducts(@Query() query: any, @Ip() ip, @Req() req: Request) {
+    const limit: number = parseInt(query?.limit) || 50;
+    const page: number = parseInt(query?.page) || 1;
     const protocol = req.protocol;
     this.productService.setProtocolAndIP({ protocol, ip });
     return await this.productService.getProducts(limit, page);
