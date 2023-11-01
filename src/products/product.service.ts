@@ -39,13 +39,13 @@ export class ProductService {
   async getProducts(limit: number, page: number): Promise<GetProductsResponse> {
     const offset: number = (page - 1) * limit;
     const totalProducts = await this.prismaService.product.count();
-    const totalPages = totalProducts / limit;
+    const totalPages = Math.ceil(totalProducts / limit);
     const products = await this.prismaService.product.findMany({
       skip: offset,
       take: limit,
     });
     const mappedProducts: Products[] = this.mapProducts(products);
-    const nextURL = this.getNextURL(limit, page, totalProducts);
+    const nextURL = this.getNextURL(limit, page, totalPages);
     const previousURL = this.getPreviousURL(limit, page);
     return {
       status: 'success',
@@ -81,12 +81,8 @@ export class ProductService {
     if (page > 1) return `${this.getURL()}?limit=${limit}&page=${page - 1}`;
     return null;
   }
-  getNextURL(
-    limit: number,
-    page: number,
-    totalProducts: number,
-  ): string | null {
-    if (page >= totalProducts) return null;
+  getNextURL(limit: number, page: number, totalPages: number): string | null {
+    if (page >= totalPages) return null;
     return `${this.getURL()}?limit=${limit}&page=${page + 1}`;
   }
 }
