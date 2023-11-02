@@ -3,7 +3,6 @@ export interface ResponseAuth {
   message: string;
   data: {
     accessToken: string;
-    refreshToken?: string;
   };
 }
 
