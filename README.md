@@ -190,7 +190,7 @@ http://127.0.0.1:3000/products
 
 ```bash
 # update products route
-http://127.0.0.1:3000/products
+http://127.0.0.1:3000/products/:id
 
 ```
 
@@ -198,6 +198,7 @@ http://127.0.0.1:3000/products
  <tr> 
     <th>Method</th>
     <th>Request header</th>
+    <th>Param</th>
     <th>Success response</th>
     <th>Error response</th>
     <th>Status code</th>
@@ -208,6 +209,7 @@ http://127.0.0.1:3000/products
     <td>
       Authorization: Bearer your_access_token
     </td>
+    <td>id product </td>
     <td>
      <img src='https://user-images.githubusercontent.com/110749286/279922825-c7b2f19a-1388-4aaf-9b0f-14b6fea72619.png'>
     </td>
@@ -224,7 +226,7 @@ http://127.0.0.1:3000/products
 
 ```bash
 # Delete products route
-http://127.0.0.1:3000/products
+http://127.0.0.1:3000/products/:id
 
 ```
 
@@ -232,6 +234,7 @@ http://127.0.0.1:3000/products
  <tr> 
     <th>Method</th>
     <th>Request header</th>
+    <th>Param</th>
     <th>Success response</th>
     <th>Error response</th>
     <th>Status code</th>
@@ -242,6 +245,7 @@ http://127.0.0.1:3000/products
     <td>
       Authorization: Bearer your_access_token
     </td>
+    <td>id product </td>
     <td>
      <img src='https://user-images.githubusercontent.com/110749286/279923266-7a57fe69-ef49-4443-87c6-f95c93de1abc.png'>
     </td>
