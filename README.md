@@ -104,15 +104,12 @@ http://127.0.0.1:3000/auth/token
 <table>
  <tr> 
     <th>Method</th>
-    <th>Request body</th>
     <th>Success response</th>
     <th>Error response</th>
     <th>Status code</th>
  </tr>
  <tr> 
     <td>GET</td>
-    <td>
-    </td>
     <td>
      <img src='https://user-images.githubusercontent.com/110749286/279916469-ec370d4e-74fa-4165-904b-cc82e214098d.png'>
     </td>
