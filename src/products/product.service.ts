@@ -4,6 +4,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import {
   CreateProductResponse,
   DeleteProductResponse,
+  GetDetailProductResponse,
   GetProductsResponse,
   UpdateProductResponse,
 } from './interfaces/products.interface';
@@ -144,5 +145,27 @@ export class ProductService {
     } catch {
       throw new NotFoundException('Product not found');
     }
+  }
+
+  async getDetailProduct(id: string): Promise<GetDetailProductResponse> {
+    const product = await this.prismaService.product.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!product) throw new NotFoundException('Product tidak ditemukan');
+    const mappedProduct = {
+      ...product,
+      createdAt: product.createdAt.toISOString(),
+      updatedAt: product.updatedAt.toISOString(),
+    };
+    return {
+      status: 'success',
+      message: 'Get detail product successfully',
+      data: {
+        items: mappedProduct,
+      },
+    };
   }
 }

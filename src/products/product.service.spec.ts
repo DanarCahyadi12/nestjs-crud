@@ -5,6 +5,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { NotFoundException } from '@nestjs/common';
+import { Products } from './entity/product.entity';
 
 describe('ProductService', () => {
   let service: ProductService;
@@ -166,5 +167,49 @@ describe('ProductService', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(NotFoundException);
     }
+  });
+
+  test('Get detail product should instance of NotFoundException', async () => {
+    try {
+      await service.getDetailProduct('test');
+    } catch (error) {
+      expect(error).toBeInstanceOf(NotFoundException);
+    }
+  });
+  test('Get detail product must be have valid error property', async () => {
+    try {
+      await service.getDetailProduct('test');
+    } catch (error) {
+      expect(error.response).toHaveProperty('error');
+      expect(error.response).toHaveProperty('message');
+      expect(error.response).toHaveProperty('statusCode');
+    }
+  });
+
+  test('Get detail product must have valid property response object', async () => {
+    const response = await service.getDetailProduct(
+      '002ba806-b053-4fd4-9542-d917738d8b25',
+    );
+    expect(response).toHaveProperty('status');
+    expect(response).toHaveProperty('message');
+    expect(response).toHaveProperty('data');
+    expect(response.data).toHaveProperty('items');
+  });
+
+  test('Items should have a valid property and value', async () => {
+    const product = await prismaService.product.findUnique({
+      where: {
+        id: '002ba806-b053-4fd4-9542-d917738d8b25',
+      },
+    });
+    const fixedDataProduct: Products = {
+      ...product,
+      createdAt: product.createdAt.toISOString(),
+      updatedAt: product.updatedAt.toISOString(),
+    };
+    const response = await service.getDetailProduct(
+      '002ba806-b053-4fd4-9542-d917738d8b25',
+    );
+    expect(response.data.items).toEqual(fixedDataProduct);
   });
 });

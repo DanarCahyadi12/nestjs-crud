@@ -39,6 +39,10 @@ export class ProductController {
     this.productService.setProtocolAndIP({ protocol, ip });
     return await this.productService.getProducts(limit, page);
   }
+  @Get(':id')
+  async getDetailProduct(@Param('id') id: string) {
+    return await this.productService.getDetailProduct(id);
+  }
 
   @Put(':id')
   @Roles(Role.Admin)

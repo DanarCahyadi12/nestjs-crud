@@ -34,3 +34,11 @@ export interface DeleteProductResponse {
   status: string;
   message: string;
 }
+
+export interface GetDetailProductResponse {
+  status: string;
+  message: string;
+  data: {
+    items: Products;
+  };
+}
