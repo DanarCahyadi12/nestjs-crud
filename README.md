@@ -156,6 +156,39 @@ http://127.0.0.1:3000/products
 </table>
 
 ```bash
+# get detail product route
+http://127.0.0.1:3000/products
+
+```
+
+<table>
+ <tr> 
+    <th>Method</th>
+    <th>Request header</th>
+    <th>Success response</th>
+    <th>Error response</th>
+    <th>Status code</th>
+    <th>Role</th>
+ </tr>
+ <tr> 
+    <td>GET</td>
+    <td>
+      Authorization: Bearer your_access_token
+    </td>
+    <td>
+     <img src='https://user-images.githubusercontent.com/110749286/280178486-8ad8c4ee-707d-4ff9-89fb-f8052e9f7703.png'>
+    </td>
+    <td> 
+      <img src='https://user-images.githubusercontent.com/110749286/279913559-6e68cbbc-2b03-451c-8b04-ff44b81e66b1.png'>
+    </td>
+    <td> 
+      200,401,404
+    </td>
+    <td> User,admin</td>
+ </tr>
+</table>
+
+```bash
 # create products route
 http://127.0.0.1:3000/products
 
